@@ -1,7 +1,6 @@
 import { ActionContext, Module } from 'vuex'
 import { CanvasElement } from '@/types/Canvas'
 import { Tool, Tracker } from '@/tools/Tool'
-import { CursorState } from './cursor'
 import { SocketState } from './socket'
 import { ToolState } from './tools'
 import { StageState } from './stage'
@@ -33,13 +32,13 @@ export enum CanvasGetters {
 }
 
 interface CanvasState {
+  tacticId: number | undefined;
   canvasElements: CanvasElement[];
   canvasElementsHistory: CanvasElement[];
 }
 
 interface RootState extends CanvasElement {
   canvas: CanvasState;
-  cursor: CursorState;
   socket: SocketState;
   tools: ToolState;
   stage: StageState;
@@ -51,6 +50,7 @@ const CanvasModule: Module<CanvasState, RootState> = {
   namespaced: true,
   state () {
     return {
+      tacticId: undefined,
       canvasElements: [],
       canvasElementsHistory: []
     }

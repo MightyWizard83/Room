@@ -84,18 +84,8 @@ export default class extends Vue {
     e.dataTransfer.effectAllowed = 'copyMove'
     const image = document.createElement('img')
     image.src = e.srcElement?.dataset?.image
-    // console.log('image', image.src)
     e.dataTransfer.setDragImage(image, 0, 0)
-    // console.log('e.dataTransfer', e.dataTransfer)
-  }
-
-  onDragEnterHandler (e: any) {
-    e.dataTransfer.dropEffect = 'copy'
-    this.dragEnabled = true
-  }
-
-  onDragOverHandler (e: any) {
-    e.preventDefault()
+    EventBus.$emit('entityDragStart', e)
   }
 
   onDragEndHandler (e: DragEvent) {

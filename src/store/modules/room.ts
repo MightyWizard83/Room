@@ -1,4 +1,5 @@
 import { ActionContext, Module } from 'vuex'
+import { Entity } from '@/types/Games/Index'
 
 export enum GameName {
   NONE = '',
@@ -157,10 +158,28 @@ export interface GameInfo {
   [key: string]: string | number | { [key: string]: string } | { [key: string]: ShipTypeImages };
 }
 
+export interface Team {
+  id: number;
+  title: string;
+  icon: string;
+  color: string;
+  noOfEntities: number;
+}
+
+export interface Tactic {
+  id: number;
+  name: string;
+  mapName: string;
+  thumbnail: string;
+  teams: Team[];
+  date: Date;
+}
+
 export interface Game {
   name: GameName;
   ships: Ship[];
   gameInfo: GameInfo | undefined;
+  tactics: Tactic[];
 }
 
 export interface RoomState {
@@ -177,7 +196,8 @@ const RoomModule: Module<RoomState, {}> = {
       game: {
         name: GameName['NONE'],
         ships: [],
-        gameInfo: undefined
+        gameInfo: undefined,
+        tactics: []
       },
       locale: Locale['ENUK']
     }

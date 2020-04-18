@@ -1,4 +1,4 @@
-interface Item {
+interface Entity {
   text: string;
   shortText: string;
   type: 'AirCarrier' | 'Battleship' | 'Cruiser'  | 'Destroyer';
@@ -18,4 +18,4 @@ interface Field {
   suffix: string;
 }
 
-export { Item, Field }
+export { Entity, Field }

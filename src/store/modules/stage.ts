@@ -29,6 +29,7 @@ export enum StageMutations {
 }
 
 export interface StageState {
+  tacticId: number | undefined;
   stageZoomMax: number;
   stageZoomMin: number;
   stageZoomStep: number;
@@ -42,6 +43,7 @@ const StageModule: Module<StageState, {}> = {
   namespaced: true,
   state () {
     return {
+      tacticId: undefined,
       stageZoomMax: 300,
       stageZoomMin: 10,
       stageZoomStep: 10,

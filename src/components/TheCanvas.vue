@@ -174,7 +174,11 @@ export default class TheCanvas extends Vue {
       this.onTouchUpHandler(e)
     })
 
-    EventBus.$on('entityDragEnd', (e: TouchEvent) => {
+    EventBus.$on('entityDragStart', (e: DragEvent) => {
+      this.onEntityDragStartHandler(e)
+    })
+
+    EventBus.$on('entityDragEnd', (e: DragEvent) => {
       this.onEntityDragEndHandler(e)
     })
 
@@ -282,25 +286,12 @@ export default class TheCanvas extends Vue {
     this.onMouseUpHandler(PointerEventMapper.touchEventMapper(event) as KonvaPointerEvent)
   }
 
-  onEntityDragEndHandler (e: any): void {
-    const event = PointerEventMapper.globalEventMapper(e, this.stageConfig, this.stageZoom, this.stageNode)
-    const layer = this.layerNode
-    const stage = this.stageNode
-    Konva.Image.fromURL(e.srcElement?.dataset?.image, (image: any) => {
-      image.setAttrs({
-        width: 20,
-        height: 20
-      })
-      const group = new Konva.Group()
-      group.add(image)
-      group.attrs.type = 'sprite'
-      layer.add(group)
-      image.position({
-        x: event.globalOffset.x - 13.5,
-        y: event.globalOffset.y - 13.5
-      })
-      layer.batchDraw()
-    })
+  onEntityDragStartHandler (event: DragEvent): void {
+    this.onMouseDownHandler(PointerEventMapper.dragEventMapper(event) as KonvaPointerEvent)
+  }
+
+  onEntityDragEndHandler (event: DragEvent): void {
+    this.onMouseUpHandler(PointerEventMapper.dragEventMapper(event) as KonvaPointerEvent)
   }
 
   get stageNode () {

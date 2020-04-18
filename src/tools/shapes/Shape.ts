@@ -81,3 +81,12 @@ export interface TextCreatorInterface extends ShapeInterface {
   colour: string;
   textString: string;
 }
+
+export interface EntityCreatorInterface extends ShapeInterface {
+  size: number;
+  colour: string;
+  image: string;
+  owner: string;
+  entityName: string;
+  isVisible: boolean;
+}

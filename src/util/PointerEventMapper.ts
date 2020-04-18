@@ -38,6 +38,29 @@ export default class PointerEventMapper {
     }
   }
 
+  static dragEventMapper = (event: DragEvent): object => {
+    const e = event as CustomDragEvent
+    let type = ''
+    switch (event.type) {
+      case 'dragstart': type = 'mousedown'; break
+      case 'dragmove': type = 'mousemove'; break
+      case 'dragend': type = 'mouseup'; break
+    }
+    const simulatedEvent = document.createEvent('MouseEvent')
+    simulatedEvent.initMouseEvent(type, true, true, window, 1,
+      e.screenX, e.screenY,
+      e.clientX, e.clientY, false,
+      false, false, false, 0, null)
+    e.target?.dispatchEvent(simulatedEvent)
+    return {
+      evt: simulatedEvent as PointerEvent,
+      target: event.target,
+      currentTarget: event.currentTarget,
+      pointerId: 0,
+      type: event.type
+    }
+  }
+
   static globalEventMapper = (e: Konva.KonvaPointerEvent | DragEvent, stageConfig: CustomStageConfig, stageZoom: number, stage: VueKonvaStage): CustomEvent => {
     let pageX = 0
     let pageY = 0
@@ -112,6 +135,11 @@ export interface CustomStageEvent {
 }
 
 export interface CustomTouchEvent extends TouchEvent {
+  evt: TouchEvent;
+  pointerId: number;
+}
+
+export interface CustomDragEvent extends DragEvent {
   evt: TouchEvent;
   pointerId: number;
 }

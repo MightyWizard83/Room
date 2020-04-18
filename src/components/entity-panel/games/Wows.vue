@@ -24,7 +24,7 @@ import { RoomGetters, RoomState, Ship } from '@/store/modules/room'
 import { Getter } from 'vuex-class'
 import { MenuItem } from '@/components/TheEntityPanel.vue'
 import { Field } from '@/types/Games/Index.ts'
-import { Item } from '@/types/Games/Index'
+import { Entity } from '@/types/Games/Index'
 import TheCreateEntity from '@/components/entity-panel/sections/TheCreateEntity.vue'
 
 @Component({
@@ -38,7 +38,7 @@ export default class Wows extends Vue {
   @Prop() private teams!: MenuItem[];
   @Getter(`room/${RoomGetters.ROOM_STATE}`) roomState!: RoomState;
 
-  entities: Item[] = []
+  entities: Entity[] = []
 
   fields: Field[] = [{
     id: 'shipMainBatteryRange',
@@ -90,7 +90,7 @@ export default class Wows extends Vue {
     suffix: 'km'
   }]
 
-  get shipsData (): Item[] {
+  get shipsData (): Entity[] {
     const roomStateGameInfo = this.roomState.game.gameInfo
     if (roomStateGameInfo) {
       if (this.roomState.game?.ships) {
@@ -134,18 +134,18 @@ export default class Wows extends Vue {
           image: roomStateGameInfo.ship_type_images[ship.type][ship.is_special ? 'image_elite' : ship.is_premium ? 'image_premium' : 'image'],
           tier: ship.tier,
           data: {}
-        })).sort((x: Item, y: Item) => x.text > y.text ? 1 : -1)]
+        })).sort((x: Entity, y: Entity) => x.text > y.text ? 1 : -1)]
       }
     }
     return []
   }
 
-  async autoCompleteOnChangeHandler (shipItem: Item) {
-    if (shipItem) {
+  async autoCompleteOnChangeHandler (shipItem: Entity) {
+    if (shipItem && !this.entities.find((entity: Entity) => entity.value === shipItem.value)) {
       this.entities.unshift(shipItem)
       const response = await axios.get(`https://api.worldofwarships.eu/wows/encyclopedia/shipprofile/?ship_id=${shipItem.value}&application_id=d84a218b4fec37003e799f13777bf880`)
       const shipData = response.data.data[shipItem.value]
-      const foundNewEntity = this.entities.find((entity: Item) => entity.value === shipItem.value)
+      const foundNewEntity = this.entities.find((entity: Entity) => entity.value === shipItem.value)
       if (foundNewEntity) {
         foundNewEntity.data = shipData
       }

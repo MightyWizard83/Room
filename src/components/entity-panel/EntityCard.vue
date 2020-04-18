@@ -4,6 +4,7 @@
     :data-tier="entity.tier"
     :data-type="entity.type"
     :data-image="entity.image"
+    :data-team="entity.selectedTeam"
     raised
     tile
     draggable
@@ -12,11 +13,21 @@
     <v-container class="pa-1">
       <v-row class="text-center mx-0">
         <v-col cols="12" class="pa-0">
-          <img class="custom-entity-card-image" :src="entity.image">
+          <img
+            :draggable="false"
+            class="custom-entity-card-image"
+            :src="entity.image"
+          >
         </v-col>
         <v-col cols="12" class="pa-0">
           <div class="caption">{{entity.shortText}}</div>
-          <v-chip v-if="entity.tier" x-small pill>T-{{entity.tier}}</v-chip>
+          <v-chip
+            v-if="entity.tier"
+            x-small
+            pill
+          >
+            T-{{entity.tier}}
+          </v-chip>
         </v-col>
       </v-row>
     </v-container>
@@ -26,14 +37,16 @@
 import Vue from 'vue'
 import { Prop } from 'vue-property-decorator'
 import Component from 'vue-class-component'
-import { Item } from '@/types/Games/Index'
+import { Entity } from '@/types/Games/Index'
+import { MenuItem } from '../TheEntityPanel.vue'
 
 @Component({
   name: 'EntityCard'
 })
 export default class EntityCard extends Vue {
   @Prop() private entityCardOnMouseHoverHandler!: (cardValue: number) => void
-  @Prop() private entity!: Item;
+  @Prop() private entity!: Entity;
+  @Prop() private selectedTeam!: MenuItem;
 }
 </script>
 <style lang="scss" scoped>

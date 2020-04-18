@@ -17,7 +17,7 @@
         mandatory
         light
         class="custom-chip-group"
-        :style="`border-bottom: 2px solid ${chipColour}`"
+        :style="`border-bottom: 2px solid ${selectedTeam && selectedTeam.color || 'white'}`"
       >
         <v-chip
           v-for="team in teams"
@@ -27,12 +27,12 @@
           label
           outlined
           :key="`chip-${team.id}`"
-          @click="chipOnClickHandler(team.color)"
+          @click="chipOnClickHandler(team)"
         >
           <v-icon :color="team.color">fa-users</v-icon>
         </v-chip>
       </v-chip-group>
-      <v-container class="pa-1">
+      <v-container class="pa-1 custom-entity-cards-container">
         <v-row
           v-if="entityData.length"
           class="custom-entity-card-row"
@@ -139,6 +139,7 @@
                   <entity-card
                     v-if="entityData.length"
                     :entity="entity"
+                    :team="selectedTeam"
                     :entityCardOnMouseHoverHandler="entityCardOnMouseHoverHandler"
                   />
                 </v-badge>
@@ -165,7 +166,7 @@
           </v-col>
         </v-row>
         <v-subheader>
-          <p class="caption">
+          <p class="caption mb-0">
             <b>Note</b> Drag and drop cards onto the canvas to create them
           </p>
         </v-subheader>
@@ -202,7 +203,7 @@
 <script lang="ts">
 import { Prop } from 'vue-property-decorator'
 import Component from 'vue-class-component'
-import { Item, Field } from '@/types/Games/Index'
+import { Entity, Field } from '@/types/Games/Index'
 import { MenuItem } from '@/components/TheEntityPanel.vue'
 import Games from '@/mixins/Games'
 import { GameName } from '../../../store/modules/room'
@@ -218,13 +219,13 @@ import EntityCard from '../EntityCard.vue'
 export default class TheCreateEntity extends Games {
   @Prop() private clickedItem!: string;
   @Prop() private teams!: MenuItem[];
-  @Prop() private entityData!: Item[];
-  @Prop() private entities!: Item[];
+  @Prop() private entityData!: Entity[];
+  @Prop() private entities!: Entity[];
   @Prop() private fields!: Field[];
   @Prop() private game!: GameName;
-  @Prop() private autoCompleteOnChangeHandler!: (shipItem: Item) => void
+  @Prop() private autoCompleteOnChangeHandler!: (shipItem: Entity) => void
 
-  chipColour = 'green'
+  selectedTeam: MenuItem = this.teams[0]
   entityCardHover = 0
   selectedEntityId = -1
   search = ''
@@ -236,11 +237,11 @@ export default class TheCreateEntity extends Games {
   }]
   isEntityPropertiesShown = false
 
-  get updatedEntities (): Item[] {
+  get updatedEntities (): Entity[] {
     return this.entities
   }
 
-  set updatedEntities (newValue: Item[]) {
+  set updatedEntities (newValue: Entity[]) {
     this.entities = newValue
     this.$emit('update:entities', newValue)
   }
@@ -249,13 +250,13 @@ export default class TheCreateEntity extends Games {
     this.isEntityPropertiesShown = false
   }
 
-  cardMenuOnClickHandler (clickedEntity: Item, action: string) {
+  cardMenuOnClickHandler (clickedEntity: Entity, action: string) {
     if (action === 'delete') {
-      this.$emit('update:entities', [...this.entities].filter((entity: Item) => entity.value !== clickedEntity.value))
+      this.$emit('update:entities', [...this.entities].filter((entity: Entity) => entity.value !== clickedEntity.value))
     }
   }
 
-  entityCardOnEditHandler (clickedEntity: Item) {
+  entityCardOnEditHandler (clickedEntity: Entity) {
     this.isEntityPropertiesShown = true
     this.selectedEntityId = clickedEntity.value
     this.fields.forEach((field: Field) => {
@@ -267,8 +268,8 @@ export default class TheCreateEntity extends Games {
     this.entityCardHover = cardValue
   }
 
-  chipOnClickHandler (color: string) {
-    this.$data.chipColour = color
+  chipOnClickHandler (team: MenuItem) {
+    this.$data.selectedTeam = team
   }
 }
 </script>
@@ -328,5 +329,11 @@ export default class TheCreateEntity extends Games {
   input{
     text-align: right;
   }
+}
+
+.custom-entity-cards-container {
+  flex-grow: 1;
+  flex-direction: column;
+  display: flex;
 }
 </style>

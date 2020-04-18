@@ -84,6 +84,18 @@ export interface TextInterface extends ToolClassInterface {
   textString: string;
 }
 
+export interface EntityInterface extends ToolClassInterface {
+  colour: string;
+  size: number;
+  temporary: boolean;
+  image: string;
+  owner: string;
+  entityName: string;
+  isVisible: boolean;
+  width: number;
+  height: number;
+}
+
 export enum Tracker {
   ADDITION = 'addition',
   REMOVAL = 'removal',

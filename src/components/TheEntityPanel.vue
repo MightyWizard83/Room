@@ -84,6 +84,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { RoomGetters, RoomState } from '@/store/modules/room'
 import { Getter } from 'vuex-class'
 import { WowsPanel, WotPanel } from './entity-panel'
+import { Team } from '@/store/modules/room'
 
 export interface MenuItem {
   id: number;
@@ -106,7 +107,7 @@ export default class MapButtons extends Vue {
 
   show = true
 
-  teams: MenuItem[] = [
+  teams: Team[] = [
     { id: 1, title: 'Team 1', icon: 'fa-users', color: 'green', noOfEntities: 0 },
     { id: 2, title: 'Team 2', icon: 'fa-users', color: 'red', noOfEntities: 0 }
   ]
@@ -173,6 +174,11 @@ export default class MapButtons extends Vue {
   min-height: 300px;
   border-bottom-left-radius: 5px;
   border-top-left-radius: 5px;
+
+  >div {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .custom-card-expanded >div >div {
